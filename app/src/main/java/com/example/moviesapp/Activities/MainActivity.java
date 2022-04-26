@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                     String website = snapshot.getValue(String.class);
                     HP.website = website;
                     loadBannerMovies();
-                    //loadMovies();
+                    loadMovies();
                 }
             }
 
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
         list = new ArrayList<>();
         moviesAdapter = new MoviesAdapter(this, list);
-        binding.recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+        binding.recyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         binding.recyclerView.setAdapter(moviesAdapter);
 
         binding.prevBtn.setOnClickListener(new View.OnClickListener() {
@@ -130,13 +131,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        binding.searchTB.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                searchMovies();
-            }
-        });
-
         binding.searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -165,6 +159,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        binding.downloadsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, DownloadsActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void loadBannerMovies(){
@@ -177,27 +178,23 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     doc = Jsoup.connect(HP.website).get();
                     Element element = doc.getElementById("slider2");
-                    Element owlWrapperOuter = element.getElementsByClass("owl-wrapper-outer").get(0);
-                    Element owlWrapper = owlWrapperOuter.getElementsByClass("owl-wrapper").get(0);
-                    Elements items = owlWrapper.getElementsByClass("owl-item");
-
-                    Log.i("doc = ", items.text());
+                    Elements items = element.getElementsByClass("item");
 
                     bannerList.clear();
-//                    for (Element element : element) {
-//                        Log.i("Element = ", element.text());
-//                        Elements movieElem = link.getElementsByClass("thumbnail");
-//                        Elements a = movieElem.get(0).getElementsByTag("a");
-//                        Elements image = a.get(0).getElementsByTag("img");
-//
-//                        Movies movie = new Movies(
-//                                a.get(0).attr("title"),
-//                                image.get(0).attr("src"),
-//                                a.get(0).attr("href")
-//                        );
-//
-//                        bannerList.add(movie);
-//                    }
+                    for (Element item : items) {
+                        Elements div = item.select("div.imagens");
+                        Elements a = div.get(0).getElementsByTag("a");
+                        Elements img = a.get(0).getElementsByTag("img");
+
+
+                        Movies movie = new Movies(
+                                a.get(0).attr("title"),
+                                img.get(0).attr("src"),
+                                a.get(0).attr("href")
+                        );
+
+                        bannerList.add(movie);
+                    }
 
                     MainActivity.this.runOnUiThread(new Runnable() {
                         @Override
@@ -274,6 +271,11 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 moviesAdapter.notifyDataSetChanged();
                 binding.recyclerView.scrollToPosition(0);
+                if(binding.searchTB.getText().length() > 0) {
+                    binding.backBtn.setVisibility(View.VISIBLE);
+                }else {
+                    binding.backBtn.setVisibility(View.GONE);
+                }
                 progressDialog.dismiss();
             }
         });

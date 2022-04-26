@@ -38,7 +38,6 @@ public class MovieActivity extends AppCompatActivity {
 
     ArrayAdapter linksAdapter;
     List<Links> links;
-//    String url = "https://extramovies.bike/90-ml-2019-full-movie-hindi-dubbed-hdrip-esubs/"; //
     String url = "https://extramovies.bike/iron-man-3-2013-hq-dual-audio-hindi-english-1080p-bluray-msubs-download/"; // torrent
     Movies movie;
     ProgressDialog progressDialog;
@@ -84,9 +83,9 @@ public class MovieActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Links link = (Links) adapterView.getItemAtPosition(i);
                 if(resolutionLinks.size() > 0) {
-                    getLinkFromResolution(link.getLink());
+                    getLinkFromResolution(link);
                 }else {
-                    getLink(link.getLink());
+                    getLink(link);
                 }
             }
         });
@@ -197,17 +196,21 @@ public class MovieActivity extends AppCompatActivity {
         }).start();
     }
 
-    private void getLinkFromResolution(String link){
+    private void getLinkFromResolution(Links link){
         new Thread(new Runnable() {
             @Override
             public void run() {
                 Document doc = null;
                 try {
-                    doc = Jsoup.connect(link).get();
+                    doc = Jsoup.connect(link.getLink()).get();
 
                     Element a = doc.select("a.dl").get(0);
 
-                    openWebView(a.attr("href"));
+                    if(link.getName().toLowerCase().contains("google drive") || link.getLink().toLowerCase().contains("sharedrive")){
+                        openGoogleChrome(a.attr("href"));
+                    }else {
+                        openWebView(a.attr("href"));
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -215,17 +218,21 @@ public class MovieActivity extends AppCompatActivity {
         }).start();
     }
 
-    private void getLink(String link){
+    private void getLink(Links link){
         new Thread(new Runnable() {
             @Override
             public void run() {
                 Document doc = null;
                 try {
-                    doc = Jsoup.connect(link).get();
+                    doc = Jsoup.connect(link.getLink()).get();
 
                     Element a = doc.select("a.dl").get(0);
 
-                    openWebView(a.attr("href"));
+                    if(link.getName().toLowerCase().contains("google drive") || link.getLink().toLowerCase().contains("sharedrive")){
+                        openGoogleChrome(a.attr("href"));
+                    }else {
+                        openWebView(a.attr("href"));
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
