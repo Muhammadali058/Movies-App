@@ -207,7 +207,7 @@ public class MovieActivity extends AppCompatActivity {
 
                     Element a = doc.select("a.dl").get(0);
 
-                    openGoogleChrome(a.attr("href"));
+                    openWebView(a.attr("href"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -225,12 +225,18 @@ public class MovieActivity extends AppCompatActivity {
 
                     Element a = doc.select("a.dl").get(0);
 
-                    openGoogleChrome(a.attr("href"));
+                    openWebView(a.attr("href"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
+    }
+
+    private void openWebView(String url){
+        Intent intent = new Intent(MovieActivity.this, WebViewActivity.class);
+        intent.putExtra("url", url);
+        startActivity(intent);
     }
 
     private void openGoogleChrome(String url){

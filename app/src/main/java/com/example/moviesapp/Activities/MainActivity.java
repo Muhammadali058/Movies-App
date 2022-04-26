@@ -7,12 +7,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.moviesapp.Adapters.BannerMoviesAdapter;
 import com.example.moviesapp.Adapters.MoviesAdapter;
 import com.example.moviesapp.HP;
 import com.example.moviesapp.Models.Movies;
@@ -36,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     FirebaseDatabase database;
     MoviesAdapter moviesAdapter;
+    BannerMoviesAdapter bannerMoviesAdapter;
+    List<Movies> bannerList;
     List<Movies> list;
     private int page = 1;
     private int searchPage = 1;
@@ -55,7 +59,8 @@ public class MainActivity extends AppCompatActivity {
                 if(snapshot.exists()){
                     String website = snapshot.getValue(String.class);
                     HP.website = website;
-                    loadMovies();
+                    loadBannerMovies();
+                    //loadMovies();
                 }
             }
 
@@ -71,6 +76,11 @@ public class MainActivity extends AppCompatActivity {
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Fetching...");
+
+        bannerList = new ArrayList<>();
+        bannerMoviesAdapter = new BannerMoviesAdapter(this, bannerList);
+        binding.bannerRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        binding.bannerRecyclerView.setAdapter(bannerMoviesAdapter);
 
         list = new ArrayList<>();
         moviesAdapter = new MoviesAdapter(this, list);
@@ -102,6 +112,19 @@ public class MainActivity extends AppCompatActivity {
                     searchMovies();
                 }else {
                     page++;
+                    loadMovies();
+                }
+            }
+        });
+
+        binding.homeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(binding.searchTB.getText().length() > 0) {
+                    searchPage = 1;
+                    searchMovies();
+                }else {
+                    page = 1;
                     loadMovies();
                 }
             }
@@ -144,6 +167,52 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private void loadBannerMovies(){
+        progressDialog.show();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Document doc = null;
+                try {
+                    doc = Jsoup.connect(HP.website).get();
+                    Element element = doc.getElementById("slider2");
+                    Element owlWrapperOuter = element.getElementsByClass("owl-wrapper-outer").get(0);
+                    Element owlWrapper = owlWrapperOuter.getElementsByClass("owl-wrapper").get(0);
+                    Elements items = owlWrapper.getElementsByClass("owl-item");
+
+                    Log.i("doc = ", items.text());
+
+                    bannerList.clear();
+//                    for (Element element : element) {
+//                        Log.i("Element = ", element.text());
+//                        Elements movieElem = link.getElementsByClass("thumbnail");
+//                        Elements a = movieElem.get(0).getElementsByTag("a");
+//                        Elements image = a.get(0).getElementsByTag("img");
+//
+//                        Movies movie = new Movies(
+//                                a.get(0).attr("title"),
+//                                image.get(0).attr("src"),
+//                                a.get(0).attr("href")
+//                        );
+//
+//                        bannerList.add(movie);
+//                    }
+
+                    MainActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            bannerMoviesAdapter.notifyDataSetChanged();
+                            progressDialog.dismiss();
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
     private void loadMovies(){
         progressDialog.show();
 
@@ -153,32 +222,7 @@ public class MainActivity extends AppCompatActivity {
                 Document doc = null;
                 try {
                     doc = Jsoup.connect(HP.website + "/page/" + page).get();
-
-                    Element content = doc.getElementById("content");
-                    Elements links = content.getElementsByClass("imag");
-
-                    list.clear();
-                    for (Element link : links) {
-                        Elements movieElem = link.getElementsByClass("thumbnail");
-                        Elements a = movieElem.get(0).getElementsByTag("a");
-                        Elements image = a.get(0).getElementsByTag("img");
-
-                        Movies movie = new Movies(
-                                a.get(0).attr("title"),
-                                image.get(0).attr("src"),
-                                a.get(0).attr("href")
-                        );
-
-                        list.add(movie);
-                    }
-
-                    MainActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            moviesAdapter.notifyDataSetChanged();
-                            progressDialog.dismiss();
-                        }
-                    });
+                    loadMovies(doc);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -197,39 +241,42 @@ public class MainActivity extends AppCompatActivity {
                     Document doc = null;
                     try {
                         doc = Jsoup.connect(HP.website +"/page/" + searchPage + "/?s=" + text).get();
-
-                        Element content = doc.getElementById("content");
-                        Elements links = content.getElementsByClass("imag");
-
-                        list.clear();
-                        for (Element link : links) {
-                            Elements movieElem = link.getElementsByClass("thumbnail");
-                            Elements a = movieElem.get(0).getElementsByTag("a");
-                            Elements image = a.get(0).getElementsByTag("img");
-
-                            Movies movie = new Movies(
-                                    a.get(0).attr("title"),
-                                    image.get(0).attr("src"),
-                                    a.get(0).attr("href")
-                            );
-
-                            list.add(movie);
-                        }
-
-                        MainActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                moviesAdapter.notifyDataSetChanged();
-                                binding.backBtn.setVisibility(View.VISIBLE);
-                                progressDialog.dismiss();
-                            }
-                        });
+                        loadMovies(doc);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             }).start();
         }
+    }
+
+    private void loadMovies(Document doc){
+        Element content = doc.getElementById("content");
+        Elements links = content.getElementsByClass("imag");
+
+        list.clear();
+        for (Element link : links) {
+            Elements movieElem = link.getElementsByClass("thumbnail");
+            Elements a = movieElem.get(0).getElementsByTag("a");
+            Elements image = a.get(0).getElementsByTag("img");
+
+            Movies movie = new Movies(
+                    a.get(0).attr("title"),
+                    image.get(0).attr("src"),
+                    a.get(0).attr("href")
+            );
+
+            list.add(movie);
+        }
+
+        MainActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                moviesAdapter.notifyDataSetChanged();
+                binding.recyclerView.scrollToPosition(0);
+                progressDialog.dismiss();
+            }
+        });
     }
 
 }
