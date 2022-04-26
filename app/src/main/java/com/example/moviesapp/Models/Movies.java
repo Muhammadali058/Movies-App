@@ -1,6 +1,8 @@
 package com.example.moviesapp.Models;
 
-public class Movies {
+import java.io.Serializable;
+
+public class Movies implements Serializable {
     String name, imageUrl, link;
 
     public Movies() {

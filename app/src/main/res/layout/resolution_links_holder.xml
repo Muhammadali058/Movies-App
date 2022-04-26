@@ -7,18 +7,12 @@
     android:clickable="true"
     android:background="?attr/selectableItemBackground">
 
-    <ImageView
-        android:id="@+id/image"
-        android:layout_width="wrap_content"
-        android:layout_height="300dp"
-        android:src="@drawable/avatar"
-        android:layout_gravity="center"/>
-
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Movie name will be here"
+        android:text="720p"
+        android:textSize="16sp"
         android:textAlignment="center"
         android:layout_gravity="center"/>
 

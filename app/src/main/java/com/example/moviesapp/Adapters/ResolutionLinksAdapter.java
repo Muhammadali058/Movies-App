@@ -11,44 +11,44 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.moviesapp.Activities.MovieActivity;
+import com.example.moviesapp.Models.Links;
 import com.example.moviesapp.Models.Movies;
 import com.example.moviesapp.R;
 import com.example.moviesapp.databinding.MoviesHolderBinding;
+import com.example.moviesapp.databinding.ResolutionLinksHolderBinding;
 
 import java.util.List;
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
+public class ResolutionLinksAdapter extends RecyclerView.Adapter<ResolutionLinksAdapter.ViewHolder> {
 
     Context context;
-    List<Movies> list;
+    List<Links> list;
+    OnClickListener onClickListener;
 
-    public MoviesAdapter(Context context, List<Movies> list) {
+    public ResolutionLinksAdapter(Context context, List<Links> list, OnClickListener onClickListener) {
         this.context = context;
         this.list = list;
+        this.onClickListener = onClickListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.movies_holder, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.resolution_links_holder, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Movies movie = list.get(position);
+        Links link = list.get(position);
 
-        holder.binding.name.setText(movie.getName());
-        Glide.with(context).load(movie.getImageUrl())
-                .placeholder(R.drawable.avatar)
-                .into(holder.binding.image);
+        holder.binding.name.setText(link.getName());
 
+        final int pos = position;
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, MovieActivity.class);
-                intent.putExtra("movie", movie);
-                context.startActivity(intent);
+                onClickListener.onClick(pos);
             }
         });
     }
@@ -59,10 +59,14 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
-        MoviesHolderBinding binding;
+        ResolutionLinksHolderBinding binding;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            binding = MoviesHolderBinding.bind(itemView);
+            binding = ResolutionLinksHolderBinding.bind(itemView);
         }
+    }
+
+    public interface OnClickListener{
+        void onClick(int position);
     }
 }
