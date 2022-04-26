@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activities.MainActivity"
-    android:background="@color/light">
+    android:background="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/searchLayout"
@@ -66,6 +66,18 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/newMovies"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_marginLeft="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/searchLayout"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/bannerRecyclerView"
         android:layout_width="match_parent"
@@ -75,7 +87,19 @@
         android:layout_marginHorizontal="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/searchLayout"/>
+        app:layout_constraintTop_toBottomOf="@+id/newMovies"/>
+
+    <TextView
+        android:id="@+id/mixedMovies"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mixed"
+        android:textColor="@color/black"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_marginLeft="5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/bannerRecyclerView"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
@@ -88,7 +112,7 @@
         app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bannerRecyclerView"/>
+        app:layout_constraintTop_toBottomOf="@+id/mixedMovies"/>
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
