@@ -37,7 +37,7 @@
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:paddingHorizontal="20dp"
-            android:paddingVertical="10dp"
+            android:paddingVertical="7dp"
             android:layout_marginRight="5dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/downloadsBtn"
@@ -131,12 +131,30 @@
             android:src="@drawable/ic_left"
             android:layout_centerVertical="true"/>
 
+        <TextView
+            android:id="@+id/prevLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PREV"
+            android:textSize="16sp"
+            android:layout_toRightOf="@id/prevBtn"
+            android:layout_centerVertical="true"/>
+
         <ImageView
             android:id="@+id/homeBtn"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerHorizontal="true"
             android:src="@drawable/ic_home"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:id="@+id/nextLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NEXT"
+            android:textSize="16sp"
+            android:layout_toLeftOf="@id/nextBtn"
             android:layout_centerVertical="true"/>
 
         <ImageView

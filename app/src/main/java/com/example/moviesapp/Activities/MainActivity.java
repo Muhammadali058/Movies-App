@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,30 +92,28 @@ public class MainActivity extends AppCompatActivity {
         binding.prevBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(binding.searchTB.getText().length() > 0) {
-                    if(searchPage > 1) {
-                        searchPage--;
-                        searchMovies();
-                    }
-                }else {
-                    if(page > 1) {
-                        page--;
-                        loadMovies();
-                    }
-                }
+                prevBtnClick();
+            }
+        });
+
+        binding.prevLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                prevBtnClick();
             }
         });
 
         binding.nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(binding.searchTB.getText().length() > 0) {
-                    searchPage++;
-                    searchMovies();
-                }else {
-                    page++;
-                    loadMovies();
-                }
+                nextBtnClick();
+            }
+        });
+
+        binding.nextLabel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                nextBtnClick();
             }
         });
 
@@ -166,6 +165,30 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private void prevBtnClick() {
+        if(binding.searchTB.getText().length() > 0) {
+            if(searchPage > 1) {
+                searchPage--;
+                searchMovies();
+            }
+        }else {
+            if(page > 1) {
+                page--;
+                loadMovies();
+            }
+        }
+    }
+
+    private void nextBtnClick() {
+        if(binding.searchTB.getText().length() > 0) {
+            searchPage++;
+            searchMovies();
+        }else {
+            page++;
+            loadMovies();
+        }
     }
 
     private void loadBannerMovies(){
@@ -276,9 +299,15 @@ public class MainActivity extends AppCompatActivity {
                 }else {
                     binding.backBtn.setVisibility(View.GONE);
                 }
+                hideKeyboard();
                 progressDialog.dismiss();
             }
         });
+    }
+
+    private void hideKeyboard(){
+        InputMethodManager imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
     }
 
 }

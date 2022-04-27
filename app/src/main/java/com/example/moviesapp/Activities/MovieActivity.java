@@ -7,18 +7,15 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
+import com.example.moviesapp.Adapters.MovieImagesAdapter;
 import com.example.moviesapp.Adapters.ResolutionLinksAdapter;
 import com.example.moviesapp.HP;
 import com.example.moviesapp.Models.Links;
 import com.example.moviesapp.Models.Movies;
-import com.example.moviesapp.R;
 import com.example.moviesapp.databinding.ActivityMovieBinding;
 
 import org.jsoup.Jsoup;
@@ -33,35 +30,39 @@ import java.util.List;
 public class MovieActivity extends AppCompatActivity {
 
     ActivityMovieBinding binding;
+    MovieImagesAdapter movieImagesAdapter;
+    List<String> imagesList;
     ResolutionLinksAdapter resolutionLinksAdapter;
     List<Links> resolutionLinks;
-
     ArrayAdapter linksAdapter;
     List<Links> links;
-    String url = "https://extramovies.bike/iron-man-3-2013-hq-dual-audio-hindi-english-1080p-bluray-msubs-download/"; // torrent
+
+    String url = "https://extramovies.bike/bachchhan-paandey-2022-full-movie-hindi-dd5-1-hdrip-esubs/"; // torrent
     Movies movie;
     ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-         binding = ActivityMovieBinding.inflate(getLayoutInflater());
+        binding = ActivityMovieBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         movie = (Movies) getIntent().getSerializableExtra("movie");
         url = movie.getLink();
         binding.name.setText(movie.getName());
-        Glide.with(this).load(movie.getImageUrl())
-                .placeholder(R.drawable.avatar)
-                .into(binding.image);
 
         init();
         loadResolutionLinks();
+        loadImages();
     }
 
     private void init(){
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
+
+        imagesList = new ArrayList<>();
+        movieImagesAdapter = new MovieImagesAdapter(this, imagesList);
+        binding.viewPager.setAdapter(movieImagesAdapter);
 
         resolutionLinks = new ArrayList<>();
         resolutionLinksAdapter = new ResolutionLinksAdapter(this, resolutionLinks, new ResolutionLinksAdapter.OnClickListener() {
@@ -77,7 +78,6 @@ public class MovieActivity extends AppCompatActivity {
         links = new ArrayList<>();
         linksAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, links);
         binding.linksListView.setAdapter(linksAdapter);
-
         binding.linksListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -89,6 +89,42 @@ public class MovieActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void loadImages(){
+//        progressDialog.show();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Document doc = null;
+                try {
+                    doc = Jsoup.connect(url).get();
+
+                    Elements ttdbox = doc.getElementsByClass("ttdbox");
+                    Elements div = ttdbox.get(0).select("div.separator");
+                    Elements images = div.get(0).getElementsByTag("img");
+
+                    imagesList.clear();
+                    if(images.size() > 0) {
+                        for (Element img : images) {
+                            imagesList.add(img.attr("src"));
+                        }
+                    }else {
+                        imagesList.add(movie.getImageUrl());
+                    }
+
+                    MovieActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            movieImagesAdapter.notifyDataSetChanged();
+//                            progressDialog.dismiss();
+                        }
+                    });
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
     private void loadResolutionLinks(){
