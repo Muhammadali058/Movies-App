@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.DownloadListener;
 import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.example.moviesapp.databinding.ActivityWebViewBinding;
@@ -28,7 +29,19 @@ public class WebViewActivity extends AppCompatActivity {
 
         WebSettings webSettings = binding.webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        binding.webView.setWebViewClient(new WebViewClient());
+        binding.webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                try {
+                    if(url.toLowerCase().contains("google drive") || url.toLowerCase().contains("sharedrive")){
+                        openGoogleChrome(url);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return false;
+            }
+        });
         binding.webView.loadUrl(url);
 
         binding.webView.setDownloadListener(new DownloadListener() {
@@ -45,7 +58,7 @@ public class WebViewActivity extends AppCompatActivity {
         });
     }
 
-    private void startGoogleChrome(String url){
+    private void openGoogleChrome(String url){
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(browserIntent);
     }

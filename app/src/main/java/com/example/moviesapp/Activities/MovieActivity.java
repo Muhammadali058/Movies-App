@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -37,7 +38,7 @@ public class MovieActivity extends AppCompatActivity {
     ArrayAdapter linksAdapter;
     List<Links> links;
 
-    String url = "https://extramovies.bike/bachchhan-paandey-2022-full-movie-hindi-dd5-1-hdrip-esubs/"; // torrent
+    String url = "https://extramovies.bike/moon-knight-season-1-dual-audio-hindi-dd5-1-720p-hdrip-esubs/";
     Movies movie;
     ProgressDialog progressDialog;
 
@@ -92,7 +93,6 @@ public class MovieActivity extends AppCompatActivity {
     }
 
     private void loadImages(){
-//        progressDialog.show();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -102,12 +102,16 @@ public class MovieActivity extends AppCompatActivity {
 
                     Elements ttdbox = doc.getElementsByClass("ttdbox");
                     Elements div = ttdbox.get(0).select("div.separator");
-                    Elements images = div.get(0).getElementsByTag("img");
 
                     imagesList.clear();
-                    if(images.size() > 0) {
+                    if(div.size() > 0) {
+                        Elements images = div.get(0).getElementsByTag("img");
                         for (Element img : images) {
-                            imagesList.add(img.attr("src"));
+                            if(img.attr("src").toLowerCase().startsWith("/")) {
+                                imagesList.add(HP.website + img.attr("src"));
+                            }else {
+                                imagesList.add(img.attr("src"));
+                            }
                         }
                     }else {
                         imagesList.add(movie.getImageUrl());
@@ -117,7 +121,6 @@ public class MovieActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             movieImagesAdapter.notifyDataSetChanged();
-//                            progressDialog.dismiss();
                         }
                     });
                 } catch (IOException e) {
@@ -138,6 +141,8 @@ public class MovieActivity extends AppCompatActivity {
 
                     Elements ttdbox = doc.getElementsByClass("ttdbox");
                     Elements isTorrent = ttdbox.get(2).getElementsByTag("h4");
+                    Elements paragraphs = ttdbox.get(2).getElementsByTag("p");
+                    Elements btnBlue = ttdbox.get(2).getElementsByTag("p").select("p a.blue");
 
                     if(isTorrent.size() > 0){
                         Elements anchors = isTorrent.get(0).getElementsByTag("a");
@@ -162,9 +167,23 @@ public class MovieActivity extends AppCompatActivity {
                                 progressDialog.dismiss();
                             }
                         });
-                    }else {
-                        Elements paragraphs = ttdbox.get(2).getElementsByTag("p");
+                    }else if(btnBlue.size() > 0){
+                        Elements anchors = ttdbox.get(2).getElementsByTag("p").select("p a");
 
+                        links.clear();
+                        for (Element a : anchors){
+                            Links link = new Links(a.text(), HP.website + a.attr("href"));
+                            links.add(link);
+                        }
+
+                        MovieActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                linksAdapter.notifyDataSetChanged();
+                                progressDialog.dismiss();
+                            }
+                        });
+                    }else if(paragraphs.text().toLowerCase().contains("480p") || paragraphs.text().toLowerCase().contains("720p") || paragraphs.text().toLowerCase().contains("1080p")){
                         resolutionLinks.clear();
                         for (int i = 1; i < paragraphs.size(); i++){
                             Element p = paragraphs.get(i);
