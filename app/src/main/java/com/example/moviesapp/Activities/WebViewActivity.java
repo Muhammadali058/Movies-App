@@ -49,11 +49,6 @@ public class WebViewActivity extends AppCompatActivity {
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);
-
-                Log.i("Url = ", url);
-                Log.i("userAgent = ", userAgent);
-                Log.i("contentDisposition = ", contentDisposition);
-                Log.i("mimetype = ", mimetype);
             }
         });
     }

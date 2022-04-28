@@ -7,7 +7,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -38,7 +37,7 @@ public class MovieActivity extends AppCompatActivity {
     ArrayAdapter linksAdapter;
     List<Links> links;
 
-    String url = "https://extramovies.bike/moon-knight-season-1-dual-audio-hindi-dd5-1-720p-hdrip-esubs/";
+    String url = "https://extramovies.bike/jersey-2022-full-movie-hindi-1080p-camrip/";
     Movies movie;
     ProgressDialog progressDialog;
 
@@ -70,7 +69,7 @@ public class MovieActivity extends AppCompatActivity {
             @Override
             public void onClick(int position) {
                 Links link = resolutionLinks.get(position);
-                loadLinksFromResolutionLink(link.getLink());
+                getLinksFromResolutionLink(link.getLink());
             }
         });
         binding.resolutionRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -83,11 +82,7 @@ public class MovieActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Links link = (Links) adapterView.getItemAtPosition(i);
-                if(resolutionLinks.size() > 0) {
-                    getLinkFromResolution(link);
-                }else {
-                    getLink(link);
-                }
+                openLink(link);
             }
         });
     }
@@ -220,7 +215,7 @@ public class MovieActivity extends AppCompatActivity {
         }).start();
     }
 
-    private void loadLinksFromResolutionLink(String link){
+    private void getLinksFromResolutionLink(String link){
         progressDialog.show();
         new Thread(new Runnable() {
             @Override
@@ -251,7 +246,7 @@ public class MovieActivity extends AppCompatActivity {
         }).start();
     }
 
-    private void getLinkFromResolution(Links link){
+    private void openLink(Links link){
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -263,29 +258,18 @@ public class MovieActivity extends AppCompatActivity {
 
                     if(link.getName().toLowerCase().contains("google drive") || link.getLink().toLowerCase().contains("sharedrive")){
                         openGoogleChrome(a.attr("href"));
-                    }else {
-                        openWebView(a.attr("href"));
+                    }else if(link.getName().toLowerCase().contains("torrent")){
+
+                        doc = Jsoup.connect(a.attr("href")).get();
+                        Elements aTorrent = doc.select("a.btn-success");
+                        if(aTorrent.size() > 0){
+                            openWebView(aTorrent.get(0).attr("href"));
+                        }else {
+                            openWebView(a.attr("href"));
+                        }
+
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
-    private void getLink(Links link){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Document doc = null;
-                try {
-                    doc = Jsoup.connect(link.getLink()).get();
-
-                    Element a = doc.select("a.dl").get(0);
-
-                    if(link.getName().toLowerCase().contains("google drive") || link.getLink().toLowerCase().contains("sharedrive")){
-                        openGoogleChrome(a.attr("href"));
-                    }else {
+                    else {
                         openWebView(a.attr("href"));
                     }
                 } catch (IOException e) {

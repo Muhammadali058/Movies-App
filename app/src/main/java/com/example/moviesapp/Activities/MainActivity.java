@@ -209,9 +209,10 @@ public class MainActivity extends AppCompatActivity {
                         Elements a = div.get(0).getElementsByTag("a");
                         Elements img = a.get(0).getElementsByTag("img");
 
+                        Element imdb = div.select("span.imdb").get(0);
 
                         Movies movie = new Movies(
-                                a.get(0).attr("title"),
+                                a.get(0).attr("title") + " (IMDB " + imdb.text() + ")",
                                 img.get(0).attr("src"),
                                 a.get(0).attr("href")
                         );
@@ -280,8 +281,10 @@ public class MainActivity extends AppCompatActivity {
             Elements a = movieElem.get(0).getElementsByTag("a");
             Elements image = a.get(0).getElementsByTag("img");
 
+            Element imdb = link.select("span.imdb").get(0);
+
             Movies movie = new Movies(
-                    a.get(0).attr("title"),
+                    a.get(0).attr("title") + " (IMDB " + imdb.text() + ")",
                     image.get(0).attr("src"),
                     a.get(0).attr("href")
             );
