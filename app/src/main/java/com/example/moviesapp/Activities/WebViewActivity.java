@@ -17,7 +17,7 @@ import com.example.moviesapp.databinding.ActivityWebViewBinding;
 public class WebViewActivity extends AppCompatActivity {
 
     ActivityWebViewBinding binding;
-    private String url;
+    String url = "https://cdn.videvo.net/videvo_files/video/premium/video0037/large_watermarked/ghetto%20levels%2001_preview.mp4";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +29,8 @@ public class WebViewActivity extends AppCompatActivity {
 
         WebSettings webSettings = binding.webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        binding.webView.loadUrl(url);
+
         binding.webView.setWebViewClient(new WebViewClient(){
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -42,10 +44,14 @@ public class WebViewActivity extends AppCompatActivity {
                 return false;
             }
         });
-        binding.webView.loadUrl(url);
 
         binding.webView.setDownloadListener(new DownloadListener() {
             public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+//                Log.i("Link = ", url);
+//                Log.i("contentDisposition = ", contentDisposition);
+//                Log.i("mimetype = ", mimetype);
+//                Log.i("contentLength = ", contentLength + "");
+
                 Intent i = new Intent(Intent.ACTION_VIEW);
                 i.setData(Uri.parse(url));
                 startActivity(i);
