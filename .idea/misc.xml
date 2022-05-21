@@ -5,10 +5,12 @@
       <map>
         <entry key="..\:/Users/HP/Documents/AndroidStudioProjects/MoviesApp/app/src/main/res/drawable/ic_arrow_back.xml" value="0.1255" />
         <entry key="..\:/Users/HP/Documents/AndroidStudioProjects/MoviesApp/app/src/main/res/drawable/textbox_bg.xml" value="0.1255" />
+        <entry key="..\:/Users/HP/Documents/AndroidStudioProjects/MoviesApp/app/src/main/res/layout/activity_downloads.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/HP/Documents/AndroidStudioProjects/MoviesApp/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/Users/HP/Documents/AndroidStudioProjects/MoviesApp/app/src/main/res/layout/activity_movie.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/HP/Documents/AndroidStudioProjects/MoviesApp/app/src/main/res/layout/activity_web_view.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/HP/Documents/AndroidStudioProjects/MoviesApp/app/src/main/res/layout/banner_movies_holder.xml" value="0.27291666666666664" />
+        <entry key="..\:/Users/HP/Documents/AndroidStudioProjects/MoviesApp/app/src/main/res/layout/download_holder.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/HP/Documents/AndroidStudioProjects/MoviesApp/app/src/main/res/layout/movies_holder.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/HP/Documents/AndroidStudioProjects/MoviesApp/app/src/main/res/layout/resolution_links_holder.xml" value="0.27291666666666664" />
         <entry key="..\:/Users/OK/Documents/AndroidStudioProjects/MoviesApp/app/src/main/res/layout/activity_downloads.xml" value="0.25" />

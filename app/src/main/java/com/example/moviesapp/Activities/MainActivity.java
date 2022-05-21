@@ -2,12 +2,19 @@ package com.example.moviesapp.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -18,6 +25,7 @@ import android.widget.Toast;
 
 import com.example.moviesapp.Adapters.BannerMoviesAdapter;
 import com.example.moviesapp.Adapters.MoviesAdapter;
+import com.example.moviesapp.Downloader.MyService;
 import com.example.moviesapp.HP;
 import com.example.moviesapp.Models.Movies;
 import com.example.moviesapp.databinding.ActivityMainBinding;
@@ -47,11 +55,31 @@ public class MainActivity extends AppCompatActivity {
     private int searchPage = 1;
     ProgressDialog progressDialog;
 
+    MyService myService;
+    ServiceConnection serviceConnection;
+    boolean isBind = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+
+        serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                MyService.MyServiceBinder binder = (MyService.MyServiceBinder) iBinder;
+                myService = binder.getService();
+                isBind = true;
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+
+            }
+        };
+
 
         init();
 
@@ -313,6 +341,24 @@ public class MainActivity extends AppCompatActivity {
         if(imm.isAcceptingText()) {
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+//        Intent intent = new Intent(MainActivity.this, MyService.class);
+//        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+//        if(isBind){
+//            unbindService(serviceConnection);
+//            isBind = false;
+//        }
     }
 
 }
