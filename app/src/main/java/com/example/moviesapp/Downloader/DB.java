@@ -73,8 +73,8 @@ public class DB extends SQLiteOpenHelper {
                 list.add(myDownloadModel);
             }
         }
-//        cursor.close();
-//        db.close();
+        cursor.close();
+        db.close();
         return list;
     }
 
@@ -100,8 +100,8 @@ public class DB extends SQLiteOpenHelper {
             else
                 myDownloadModel.setPaused(false);
         }
-//        cursor.close();
-//        db.close();
+        cursor.close();
+        db.close();
         return myDownloadModel;
     }
 
@@ -134,7 +134,7 @@ public class DB extends SQLiteOpenHelper {
             values.put("isPaused", 0);
 
         long id = db.insert(TABLE_DOWNLOADS, null, values);
-//        db.close();
+        db.close();
         return id;
     }
 
@@ -155,7 +155,7 @@ public class DB extends SQLiteOpenHelper {
             values.put("isPaused", 0);
 
         db.update(TABLE_DOWNLOADS, values, "id=?", new String[]{String.valueOf(myDownloadModel.getId())});
-//        db.close();
+        db.close();
     }
 
     public void deleteDownload(long id){
@@ -163,7 +163,7 @@ public class DB extends SQLiteOpenHelper {
 
         db.delete(TABLE_DOWNLOADS, "id=?", new String[]{String.valueOf(id)});
 
-//        db.close();
+        db.close();
     }
 
 }
