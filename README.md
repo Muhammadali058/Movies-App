@@ -7,6 +7,7 @@ You can download all movies or seasons in HD formats.
 
 - [jsoup](https://jsoup.org/) Java HTML Parser
 - Web scraping techniques
+- Bound Service for downloading in background
 
 ## Screenshots
 
