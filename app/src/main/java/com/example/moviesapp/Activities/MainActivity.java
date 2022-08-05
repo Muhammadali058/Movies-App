@@ -2,19 +2,18 @@ package com.example.moviesapp.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
+import android.os.Environment;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -25,7 +24,6 @@ import android.widget.Toast;
 
 import com.example.moviesapp.Adapters.BannerMoviesAdapter;
 import com.example.moviesapp.Adapters.MoviesAdapter;
-import com.example.moviesapp.Downloader.MyService;
 import com.example.moviesapp.HP;
 import com.example.moviesapp.Models.Movies;
 import com.example.moviesapp.databinding.ActivityMainBinding;
@@ -55,31 +53,13 @@ public class MainActivity extends AppCompatActivity {
     private int searchPage = 1;
     ProgressDialog progressDialog;
 
-    MyService myService;
-    ServiceConnection serviceConnection;
-    boolean isBind = false;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
-        serviceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                MyService.MyServiceBinder binder = (MyService.MyServiceBinder) iBinder;
-                myService = binder.getService();
-                isBind = true;
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName componentName) {
-
-            }
-        };
-
+        checkPermissions();
 
         init();
 
@@ -343,22 +323,58 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    void checkPermissions(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.R){
+            if(!Environment.isExternalStorageManager()){
+                try {
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                    intent.addCategory("android.intent.category.DEFAULT");
+                    Uri uri = Uri.fromParts("package", getPackageName(), null);
+                    intent.setData(uri);
+                    startActivityForResult(intent, 100);
+                    Log.i("Above", "Called");
+                }catch (Exception e){
+                    e.printStackTrace();
+                    Intent intent = new Intent();
+                    intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                    startActivityForResult(intent, 100);
+                    Log.i("Below", "Called");
+                }
+            }
+        }else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED |
+                        checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                ){
+                    requestPermissions(new String[]{
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                    }, 123);
+                }
+            }
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == 123){
+            if(grantResults[0] != PackageManager.PERMISSION_GRANTED){
+                Toast.makeText(this, "Please allow to work properly.", Toast.LENGTH_SHORT).show();
+                checkPermissions();
+            }
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
-
-//        Intent intent = new Intent(MainActivity.this, MyService.class);
-//        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-
-//        if(isBind){
-//            unbindService(serviceConnection);
-//            isBind = false;
-//        }
     }
 
 }

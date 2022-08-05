@@ -2,8 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.moviesapp">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="true"
@@ -16,7 +18,13 @@
 
         <activity
             android:name=".Activities.DownloadsActivity"
-            android:exported="false" />
+            android:exported="true">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
 
         <activity
             android:name=".Activities.WebViewActivity"
@@ -45,7 +53,6 @@
              <intent-filter>
                  <action android:name="android.intent.action.MAIN" />
 
-
                  <category android:name="android.intent.category.LAUNCHER" />
              </intent-filter>
         </activity>
@@ -59,11 +66,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
-        <service
-            android:name=".Downloader.MyService"
-            android:enabled="true"
-            android:exported="false" />
 
     </application>
 

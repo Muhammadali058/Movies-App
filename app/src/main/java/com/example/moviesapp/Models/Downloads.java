@@ -1,19 +1,36 @@
-package com.example.moviesapp.Downloader;
+package com.example.moviesapp.Models;
+
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
-public class MyDownloadModel implements Serializable {
+@Entity
+public class Downloads implements Serializable {
+    @PrimaryKey(autoGenerate = true)
     long id;
+    @ColumnInfo
+    long downloadId;
+    @ColumnInfo
     String url;
+    @ColumnInfo
     String fileName;
+    @ColumnInfo
     String filePath;
+    @ColumnInfo
     long fileSize;
+    @ColumnInfo
     int progress;
+    @ColumnInfo
     long downloaded;
+    @ColumnInfo
     String status;
+    @ColumnInfo
     boolean isPaused;
 
-    public MyDownloadModel() {
+    public Downloads() {
+
     }
 
     public long getId() {
@@ -22,6 +39,14 @@ public class MyDownloadModel implements Serializable {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getDownloadId() {
+        return downloadId;
+    }
+
+    public void setDownloadId(long downloadId) {
+        this.downloadId = downloadId;
     }
 
     public String getUrl() {
@@ -90,12 +115,12 @@ public class MyDownloadModel implements Serializable {
 
     @Override
     public String toString() {
-        return id + " = " + fileName;
+        return downloadId + " = " + fileName;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if(this == (MyDownloadModel)obj)
+        if(this == (Downloads)obj)
             return true;
         else
             return false;

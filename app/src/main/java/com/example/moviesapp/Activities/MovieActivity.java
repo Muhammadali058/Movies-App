@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -222,11 +223,22 @@ public class MovieActivity extends AppCompatActivity {
             public void run() {
                 Document doc = null;
                 try {
+                    links.clear();
+
                     doc = Jsoup.connect(link).get();
+
+                    try {
+                        Elements torrents = doc.select(".entry-content p a");
+                        String torrentLink = HP.website + torrents.get(0).attr("href");
+
+                        Links link = new Links("Torrent", torrentLink);
+                        links.add(link);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
 
                     Elements elements = doc.select(".entry-content h4 a");
 
-                    links.clear();
                     for (Element a : elements){
                         Links link = new Links(a.text(), HP.website + a.attr("href"));
                         links.add(link);

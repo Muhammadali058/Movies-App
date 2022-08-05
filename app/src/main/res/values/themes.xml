@@ -13,4 +13,17 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="MainToolbar" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="android:background">@color/purple_500</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
+
+    <style name="MyToolbarPopup" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="android:background">@color/white</item>
+        <item name="android:textColorPrimary">@color/black</item>
+    </style>
+
+
 </resources>

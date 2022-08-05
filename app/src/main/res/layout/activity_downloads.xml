@@ -7,11 +7,19 @@
     tools:context=".Activities.DownloadsActivity"
     android:orientation="vertical">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/MainToolbar"
+        app:popupTheme="@style/MyToolbarPopup"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="10dp"
-        tools:listitem="@layout/download_holder"/>
+        tools:listitem="@layout/downloads_holder"/>
 
 </LinearLayout>
