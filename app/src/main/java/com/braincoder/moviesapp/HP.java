@@ -1,4 +1,4 @@
-package com.example.moviesapp;
+package com.braincoder.moviesapp;
 
 public class HP {
     public static String website = "https://extramovies.bike";

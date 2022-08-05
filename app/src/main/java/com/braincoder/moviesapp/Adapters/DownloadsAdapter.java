@@ -1,4 +1,4 @@
-package com.example.moviesapp.Adapters;
+package com.braincoder.moviesapp.Adapters;
 
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
@@ -21,10 +21,10 @@ import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.moviesapp.Downloader.AppDatabase;
-import com.example.moviesapp.Models.Downloads;
-import com.example.moviesapp.R;
-import com.example.moviesapp.databinding.DownloadsHolderBinding;
+import com.braincoder.moviesapp.Downloader.AppDatabase;
+import com.braincoder.moviesapp.Models.Downloads;
+import com.braincoder.moviesapp.R;
+import com.braincoder.moviesapp.databinding.DownloadsHolderBinding;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -132,7 +132,12 @@ public class DownloadsAdapter extends RecyclerView.Adapter<DownloadsAdapter.View
         }
 
         if(download.getStatus().equalsIgnoreCase("Completed")){
-            holder.binding.pauseResumeBtn.setVisibility(View.GONE);
+            if(download.getFileName().toLowerCase().contains("torrent")){
+                holder.binding.pauseResumeBtn.setVisibility(View.INVISIBLE);
+                holder.binding.torrentBtn.setVisibility(View.VISIBLE);
+            }else {
+                holder.binding.pauseResumeBtn.setVisibility(View.GONE);
+            }
         }else {
             holder.binding.pauseResumeBtn.setVisibility(View.VISIBLE);
         }

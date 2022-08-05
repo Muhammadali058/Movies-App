@@ -1,4 +1,4 @@
-package com.example.moviesapp.Activities;
+package com.braincoder.moviesapp.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -7,17 +7,16 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
-import com.example.moviesapp.Adapters.MovieImagesAdapter;
-import com.example.moviesapp.Adapters.ResolutionLinksAdapter;
-import com.example.moviesapp.HP;
-import com.example.moviesapp.Models.Links;
-import com.example.moviesapp.Models.Movies;
-import com.example.moviesapp.databinding.ActivityMovieBinding;
+import com.braincoder.moviesapp.Adapters.MovieImagesAdapter;
+import com.braincoder.moviesapp.Adapters.ResolutionLinksAdapter;
+import com.braincoder.moviesapp.HP;
+import com.braincoder.moviesapp.Models.Links;
+import com.braincoder.moviesapp.Models.Movies;
+import com.braincoder.moviesapp.databinding.ActivityMovieBinding;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

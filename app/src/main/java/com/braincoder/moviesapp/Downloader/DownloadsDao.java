@@ -1,4 +1,4 @@
-package com.example.moviesapp.Downloader;
+package com.braincoder.moviesapp.Downloader;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -7,7 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.example.moviesapp.Models.Downloads;
+import com.braincoder.moviesapp.Models.Downloads;
 
 import java.util.List;
 

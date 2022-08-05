@@ -8,6 +8,35 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:290876485013:android:043ed06a440e47a4969a9c",
+        "android_client_info": {
+          "package_name": "com.braincoder.moviesapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "290876485013-aj1uiouihae5rsos35f312fu3o9bgagj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBB2cU8E2nVoRhD-MGGeqVvyZlOM1JMm78"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "290876485013-aj1uiouihae5rsos35f312fu3o9bgagj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:290876485013:android:e5b1ce73b04a3686969a9c",
         "android_client_info": {
           "package_name": "com.example.moviesapp"

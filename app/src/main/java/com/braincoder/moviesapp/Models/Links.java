@@ -1,4 +1,4 @@
-package com.example.moviesapp.Models;
+package com.braincoder.moviesapp.Models;
 
 import androidx.annotation.NonNull;
 

@@ -1,4 +1,4 @@
-package com.example.moviesapp.Downloader;
+package com.braincoder.moviesapp.Downloader;
 
 import android.content.Context;
 
@@ -6,7 +6,7 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.example.moviesapp.Models.Downloads;
+import com.braincoder.moviesapp.Models.Downloads;
 
 @Database(entities = {Downloads.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {

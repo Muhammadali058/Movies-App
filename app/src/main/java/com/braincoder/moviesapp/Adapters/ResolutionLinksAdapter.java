@@ -1,7 +1,6 @@
-package com.example.moviesapp.Adapters;
+package com.braincoder.moviesapp.Adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,13 +8,10 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.example.moviesapp.Activities.MovieActivity;
-import com.example.moviesapp.Models.Links;
-import com.example.moviesapp.Models.Movies;
-import com.example.moviesapp.R;
-import com.example.moviesapp.databinding.MoviesHolderBinding;
-import com.example.moviesapp.databinding.ResolutionLinksHolderBinding;
+import com.braincoder.moviesapp.Models.Links;
+import com.braincoder.moviesapp.R;
+import com.braincoder.moviesapp.databinding.MoviesHolderBinding;
+import com.braincoder.moviesapp.databinding.ResolutionLinksHolderBinding;
 
 import java.util.List;
 

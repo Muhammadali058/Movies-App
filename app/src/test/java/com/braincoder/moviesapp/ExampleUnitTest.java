@@ -1,4 +1,4 @@
-package com.example.moviesapp;
+package com.braincoder.moviesapp;
 
 import org.junit.Test;
 

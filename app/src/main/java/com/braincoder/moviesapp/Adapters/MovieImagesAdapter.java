@@ -1,4 +1,4 @@
-package com.example.moviesapp.Adapters;
+package com.braincoder.moviesapp.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
-import com.example.moviesapp.R;
+import com.braincoder.moviesapp.R;
 
 import java.util.List;
 

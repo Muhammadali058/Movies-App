@@ -1,4 +1,4 @@
-package com.example.moviesapp.Activities;
+package com.braincoder.moviesapp.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.webkit.DownloadListener;
 import android.webkit.URLUtil;
@@ -19,16 +18,9 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.example.moviesapp.Downloader.AppDatabase;
-import com.example.moviesapp.HP;
-import com.example.moviesapp.Models.Downloads;
-import com.example.moviesapp.Models.Links;
-import com.example.moviesapp.databinding.ActivityWebViewBinding;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import com.braincoder.moviesapp.Downloader.AppDatabase;
+import com.braincoder.moviesapp.Models.Downloads;
+import com.braincoder.moviesapp.databinding.ActivityWebViewBinding;
 
 import java.io.File;
 import java.io.IOException;

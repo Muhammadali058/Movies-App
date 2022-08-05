@@ -1,4 +1,4 @@
-package com.example.moviesapp.Activities;
+package com.braincoder.moviesapp.Activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,11 +22,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.moviesapp.Adapters.BannerMoviesAdapter;
-import com.example.moviesapp.Adapters.MoviesAdapter;
-import com.example.moviesapp.HP;
-import com.example.moviesapp.Models.Movies;
-import com.example.moviesapp.databinding.ActivityMainBinding;
+import com.braincoder.moviesapp.Adapters.BannerMoviesAdapter;
+import com.braincoder.moviesapp.Adapters.MoviesAdapter;
+import com.braincoder.moviesapp.HP;
+import com.braincoder.moviesapp.Models.Movies;
+import com.braincoder.moviesapp.databinding.ActivityMainBinding;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
         checkPermissions();
 
+        initAds();
         init();
 
         database.getReference("website").addValueEventListener(new ValueEventListener() {
@@ -79,6 +82,12 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void initAds(){
+        MobileAds.initialize(this);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        binding.bannerAdView.loadAd(adRequest);
     }
 
     private void init(){
