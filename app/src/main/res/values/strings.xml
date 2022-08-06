@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Movies</string>
     <string name="app_id">ca-app-pub-7767494972294483~9985132545</string>
-    <string name="banner_ad_unit_id">ca-app-pub-7767494972294483/2117987483</string>
+    <string name="interstitial_ad_unit_id">ca-app-pub-7767494972294483/8274301919</string>
 </resources>

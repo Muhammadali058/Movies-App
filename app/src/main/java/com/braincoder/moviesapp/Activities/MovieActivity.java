@@ -96,28 +96,31 @@ public class MovieActivity extends AppCompatActivity {
                     doc = Jsoup.connect(url).get();
 
                     Elements ttdbox = doc.getElementsByClass("ttdbox");
-                    Elements div = ttdbox.get(0).select("div.separator");
+                    if(ttdbox.size() > 0){
+                        Elements div = ttdbox.get(0).select("div.separator");
 
-                    imagesList.clear();
-                    if(div.size() > 0) {
-                        Elements images = div.get(0).getElementsByTag("img");
-                        for (Element img : images) {
-                            if(img.attr("src").toLowerCase().startsWith("/")) {
-                                imagesList.add(HP.website + img.attr("src"));
-                            }else {
-                                imagesList.add(img.attr("src"));
+                        imagesList.clear();
+                        if(div.size() > 0) {
+                            Elements images = div.get(0).getElementsByTag("img");
+                            for (Element img : images) {
+                                if(img.attr("src").toLowerCase().startsWith("/")) {
+                                    imagesList.add(HP.website + img.attr("src"));
+                                }else {
+                                    imagesList.add(img.attr("src"));
+                                }
                             }
+                        }else {
+                            imagesList.add(movie.getImageUrl());
                         }
-                    }else {
-                        imagesList.add(movie.getImageUrl());
+
+                        MovieActivity.this.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                movieImagesAdapter.notifyDataSetChanged();
+                            }
+                        });
                     }
 
-                    MovieActivity.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            movieImagesAdapter.notifyDataSetChanged();
-                        }
-                    });
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -135,78 +138,83 @@ public class MovieActivity extends AppCompatActivity {
                     doc = Jsoup.connect(url).get();
 
                     Elements ttdbox = doc.getElementsByClass("ttdbox");
-                    Elements isTorrent = ttdbox.get(2).getElementsByTag("h4");
-                    Elements paragraphs = ttdbox.get(2).getElementsByTag("p");
-                    Elements btnBlue = ttdbox.get(2).getElementsByTag("p").select("p a.blue");
+                    if(ttdbox.size() > 0) {
+                        Elements isTorrent = ttdbox.get(2).getElementsByTag("h4");
+                        Elements paragraphs = ttdbox.get(2).getElementsByTag("p");
+                        Elements btnBlue = ttdbox.get(2).getElementsByTag("p").select("p a.blue");
 
-                    if(isTorrent.size() > 0){
-                        Elements anchors = isTorrent.get(0).getElementsByTag("a");
+                        if(isTorrent.size() > 0){
+                            Elements anchors = isTorrent.get(0).getElementsByTag("a");
 
-                        links.clear();
+                            links.clear();
 
-                        Elements torrent = ttdbox.get(2).select("p a.torrent");
-                        if(torrent.size() > 0){
-                            Links link = new Links("Torrent Download", HP.website + torrent.get(0).attr("href"));
-                            links.add(link);
-                        }
-
-                        for (Element a: anchors){
-                            Links link = new Links(a.text(), HP.website + a.attr("href"));
-                            links.add(link);
-                        }
-
-                        MovieActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                linksAdapter.notifyDataSetChanged();
-                                progressDialog.dismiss();
+                            Elements torrent = ttdbox.get(2).select("p a.torrent");
+                            if(torrent.size() > 0){
+                                Links link = new Links("Torrent Download", HP.website + torrent.get(0).attr("href"));
+                                links.add(link);
                             }
-                        });
-                    }else if(btnBlue.size() > 0){
-                        Elements anchors = ttdbox.get(2).getElementsByTag("p").select("p a");
 
-                        links.clear();
-                        for (Element a : anchors){
-                            Links link = new Links(a.text(), HP.website + a.attr("href"));
-                            links.add(link);
-                        }
-
-                        MovieActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                linksAdapter.notifyDataSetChanged();
-                                progressDialog.dismiss();
+                            for (Element a: anchors){
+                                Links link = new Links(a.text(), HP.website + a.attr("href"));
+                                links.add(link);
                             }
-                        });
-                    }else if(paragraphs.text().toLowerCase().contains("480p") || paragraphs.text().toLowerCase().contains("720p") || paragraphs.text().toLowerCase().contains("1080p")){
-                        resolutionLinks.clear();
-                        for (int i = 1; i < paragraphs.size(); i++){
-                            Element p = paragraphs.get(i);
-                            if (i % 2 != 0){
-                                if(p.text().toLowerCase().contains("480p")){
-                                    Element a = paragraphs.get(i +1).getElementsByTag("a").get(0);
-                                    Links link = new Links("480p", a.attr("href"));
-                                    resolutionLinks.add(link);
-                                }else if(p.text().toLowerCase().contains("720p")){
-                                    Element a = paragraphs.get(i +1).getElementsByTag("a").get(0);
-                                    Links link = new Links("720p", a.attr("href"));
-                                    resolutionLinks.add(link);
-                                }else if(p.text().toLowerCase().contains("1080p")){
-                                    Element a = paragraphs.get(i +1).getElementsByTag("a").get(0);
-                                    Links link = new Links("1080p", a.attr("href"));
-                                    resolutionLinks.add(link);
+
+                            MovieActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    linksAdapter.notifyDataSetChanged();
+                                    progressDialog.dismiss();
+                                }
+                            });
+                        }
+                        else if(btnBlue.size() > 0){
+                            Elements anchors = ttdbox.get(2).getElementsByTag("p").select("p a");
+
+                            links.clear();
+                            for (Element a : anchors){
+                                Links link = new Links(a.text(), HP.website + a.attr("href"));
+                                links.add(link);
+                            }
+
+                            MovieActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    linksAdapter.notifyDataSetChanged();
+                                    progressDialog.dismiss();
+                                }
+                            });
+                        }
+                        else if(paragraphs.text().toLowerCase().contains("480p") || paragraphs.text().toLowerCase().contains("720p") || paragraphs.text().toLowerCase().contains("1080p")){
+                            resolutionLinks.clear();
+                            for (int i = 1; i < paragraphs.size(); i++){
+                                Element p = paragraphs.get(i);
+                                if (i % 2 != 0){
+                                    if(p.text().toLowerCase().contains("480p")){
+                                        Element a = paragraphs.get(i +1).getElementsByTag("a").get(0);
+                                        Links link = new Links("480p", a.attr("href"));
+                                        resolutionLinks.add(link);
+                                    }else if(p.text().toLowerCase().contains("720p")){
+                                        Element a = paragraphs.get(i +1).getElementsByTag("a").get(0);
+                                        Links link = new Links("720p", a.attr("href"));
+                                        resolutionLinks.add(link);
+                                    }else if(p.text().toLowerCase().contains("1080p")){
+                                        Element a = paragraphs.get(i +1).getElementsByTag("a").get(0);
+                                        Links link = new Links("1080p", a.attr("href"));
+                                        resolutionLinks.add(link);
+                                    }
                                 }
                             }
-                        }
 
-                        MovieActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                resolutionLinksAdapter.notifyDataSetChanged();
-                                progressDialog.dismiss();
-                            }
-                        });
+                            MovieActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    resolutionLinksAdapter.notifyDataSetChanged();
+                                    progressDialog.dismiss();
+                                }
+                            });
+                        }
                     }
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

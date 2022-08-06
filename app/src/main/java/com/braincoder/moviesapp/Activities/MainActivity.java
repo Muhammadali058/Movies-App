@@ -26,9 +26,15 @@ import com.braincoder.moviesapp.Adapters.BannerMoviesAdapter;
 import com.braincoder.moviesapp.Adapters.MoviesAdapter;
 import com.braincoder.moviesapp.HP;
 import com.braincoder.moviesapp.Models.Movies;
+import com.braincoder.moviesapp.R;
 import com.braincoder.moviesapp.databinding.ActivityMainBinding;
+import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -54,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private int page = 1;
     private int searchPage = 1;
     ProgressDialog progressDialog;
+    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +93,72 @@ public class MainActivity extends AppCompatActivity {
 
     private void initAds(){
         MobileAds.initialize(this);
+
+        // For banner ad
+//        binding.bannerAdView.loadAd(adRequest);
+
+        loadAd();
+    }
+
+    private void loadAd(){
         AdRequest adRequest = new AdRequest.Builder().build();
-        binding.bannerAdView.loadAd(adRequest);
+
+        // For interstitial ad
+        InterstitialAd.load(this, getString(R.string.interstitial_ad_unit_id), adRequest, new InterstitialAdLoadCallback() {
+            @Override
+            public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                super.onAdFailedToLoad(loadAdError);
+                Log.d("Ad Message", "Failed to load Ad");
+//                loadAd();
+            }
+
+            @Override
+            public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                super.onAdLoaded(interstitialAd);
+
+                mInterstitialAd = interstitialAd;
+
+            }
+        });
+    }
+
+    private void showAd(){
+        if(mInterstitialAd != null){
+            mInterstitialAd.show(MainActivity.this);
+
+            mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
+                @Override
+                public void onAdDismissedFullScreenContent() {
+                    // Called when ad is dismissed.
+                    // Set the ad reference to null so you don't show the ad a second time.
+                    mInterstitialAd = null;
+//                    loadAd();
+                    finish();
+                }
+
+                @Override
+                public void onAdFailedToShowFullScreenContent(AdError adError) {
+                    // Called when ad fails to show.
+                    mInterstitialAd = null;
+//                    loadAd();
+                    finish();
+                }
+
+            });
+
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(mInterstitialAd != null){
+            showAd();
+        }else {
+            Log.d("Ad Message", "Failed to load Ad");
+            finish();
+        }
+
+        super.onBackPressed();
     }
 
     private void init(){
